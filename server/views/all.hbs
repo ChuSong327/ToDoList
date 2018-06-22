@@ -1,3 +1,10 @@
-{{#each todos}}
-        <li class="list-group-item">{{Title}}</li>
-{{/each}}
+<ul class="list-group">
+        {{#each todos}}
+                <li class="list-group-item">{{Title}}</li>
+        {{/each}}
+</ul>
+
+<a class="btn btn-primary" href="/todo/new" role="button">
+        New Todo
+</a>
+
