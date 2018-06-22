@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
       table.text("Title").notNullable();
       table.integer("Priority").notNullable();
       table.text("Description");
-      table.boolean("Done").defaultTo("False").notNullable();
+      table.boolean("Done").defaultTo(false).notNullable();
       table.dateTime("Date").notNullable();
   })
 };
