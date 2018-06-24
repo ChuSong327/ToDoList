@@ -10,22 +10,31 @@ router.get('/', (req, res) => {
     })
 });
 
+function respondAndRenderTodo(id, res, viewName) {
+    if(typeof id !== "undefined") {
+        knex("todo").select().where("id", id).first().then(todo => {
+            res.render(viewName, todo)
+        }); 
+    } else {
+        res.status(500);
+        res.render('error', {
+            message: 'Invalid ID'
+        });
+    }
+};
+
 router.get('/new', (req, res) => {
    res.render("new");
 });
 
 router.get('/:id', (req, res) => {
     const id = req.params.id;
-     knex("todo").select().where("id", id).first().then(todo => {
-        res.render('single', todo);
-    })
+    respondAndRenderTodo(id, res, 'single');
 });
 
 router.get('/:id/edit', (req, res) => {
     const id = req.params.id;
-     knex("todo").select().where("id", id).first().then(todo => {
-        res.render('edit', todo);
-    })
+    respondAndRenderTodo(id, res, 'edit');
 });
 
 function validTodo(todo){
@@ -49,7 +58,8 @@ function validateTodoInsertUpdateRedirect(req, res, callback) {
             message: "Invalid Todo"
         });
     }
-}
+};
+
 router.post('/', (req, res) => {
     validateTodoInsertUpdateRedirect(req, res, (todo) => {
         todo.Date = new Date();
@@ -69,5 +79,19 @@ router.put('/:id', (req, res) => {
        })
    })
 });
+
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    if(typeof id !== "undefined") {
+        knex("todo").where("id", id).del().then(() => {
+            res.redirect("/todo");
+        });
+    } else {
+        res.status(500);
+        res.render("error", {
+            message: "Invalid ID"
+        });
+    }
+})
 
 module.exports = router;
